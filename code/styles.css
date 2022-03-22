@@ -3,6 +3,9 @@ body {
 	overflow: hidden;
   font-family: 'Lato', sans-serif;
 }
+circle {
+	fill: dodgerblue;
+}
 .tick line {
 	stroke: #777777;
 }
@@ -16,24 +19,15 @@ body {
     font-family: 'Lato', sans-serif;
     font-size: 1.5em;
 }
-
-circle {
-	fill: dodgerblue;
+.tooltipLine {
+  stroke: navy;
+  stroke-width: 2;
+  opacity: 0.3;
 }
-
-.voronoi {
-  fill: transparent;
+.tooltipDot {
+  fill: navy;
 }
-
-.marks path {
-	stroke: dodgerblue;
-  stroke-width: 1;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-}
-
 .tooltip {
-/*     opacity: 0; */
     position: absolute;
     top: -12px;
     left: 0;
@@ -44,4 +38,7 @@ circle {
     z-index: 10;
     transition: all 0.2s ease-out;
     pointer-events: none;
+}
+.voronoi {
+  fill: transparent;
 }

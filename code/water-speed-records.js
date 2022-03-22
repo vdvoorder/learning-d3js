@@ -179,7 +179,6 @@ async function drawChart() {
             .attr("cx", xScale(xAccessor(datum)))
             .attr("cy", yScale(yAccessor(datum)))
             .attr("r", 7)
-            .style("fill", "navy")
             .style("pointer-events", "none")
 
         const shootingLine = bounds.append("line")
@@ -189,10 +188,8 @@ async function drawChart() {
             .attr("x2", xScale(xAccessor(datum)))
             .attr("y2", yScale(yAccessor(datum)))
             // .attr("stroke", d => colorScale(colorAccessor(d)))
-            .attr("stroke", "navy")
-            .attr("opacity", 0.6)
-            .attr("stroke-width", "2px")
-        
+            .style("pointer-events", "none")
+
         const formatSpeed = d3.format(".2f")
         tooltip.select("#speed")
             .text(formatSpeed(xAccessor(datum)))
