@@ -21,6 +21,10 @@ circle {
 	fill: dodgerblue;
 }
 
+.voronoi {
+  fill: transparent;
+}
+
 .marks path {
 	stroke: dodgerblue;
   stroke-width: 1;

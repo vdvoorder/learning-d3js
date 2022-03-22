@@ -147,6 +147,25 @@ async function drawChart() {
 
     /* 7. Set up interactions */
 
+    const delaunay = d3.Delaunay.from(
+        dataset,
+        d => xScale(xAccessor(d)),
+        d => yScale(yAccessor(d)),
+    )
+        
+    const voronoi = delaunay.voronoi()
+    voronoi.xmax = dimensions.boundedWidth
+    voronoi.ymax = dimensions.boundedHeight
+
+    bounds.selectAll(".voronoi")
+        .data(dataset)
+        .enter().append("path")
+        .attr("class", "voronoi")
+        .attr("d", (d, i) => voronoi.renderCell(i))
+        //.attr("stroke", "salmon")
+        .on("mouseenter", onMouseEnter)
+        .on("mouseleave", onMouseLeave)
+        
     bounds.selectAll("circle")
         .on("mouseenter", onMouseEnter)
         .on("mouseleave", onMouseLeave)
@@ -215,4 +234,4 @@ async function drawChart() {
 }
 drawChart()
 
-// TODO: make lines appear from left to right when hovering
+// TODO: make shootingLine appear from left to right when hovering
