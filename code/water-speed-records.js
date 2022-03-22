@@ -162,7 +162,7 @@ async function drawChart() {
         .enter().append("path")
         .attr("class", "voronoi")
         .attr("d", (d, i) => voronoi.renderCell(i))
-        //.attr("stroke", "salmon")
+        .attr("stroke", "salmon")
         .on("mouseenter", onMouseEnter)
         .on("mouseleave", onMouseLeave)
         
