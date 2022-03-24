@@ -9,7 +9,6 @@ async function drawChart() {
 
     const xAccessor = d => +d.speed_kmh
     const yAccessor = d => parseDate(d["date"])
-    // const colorAccessor = d => d["captain"]
 
     const xAxisLabelText = "Speed (km/h)"
     const yAxisLabelText = "Time"
@@ -65,36 +64,6 @@ async function drawChart() {
         .domain(d3.extent(dataset, yAccessor))
         .range([0, dimensions.boundedHeight])
         .nice()
-
-    // const colorScale = d3.scaleOrdinal()
-    //     .domain(d3.extent(dataset, colorAccessor))
-    //     .range(d3.schemeSet3)
-
-    /* 5. Draw data */
-    // let lines = bounds.selectAll("line")
-    //     .data(dataset)
-    //     .enter()
-    //     .append("line")
-    //     .attr("x1", 0)
-    //     .attr("y1", d => yScale(yAccessor(d)))
-    //     .attr("x2", d => xScale(xAccessor(d)))
-    //     .attr("y2", d => yScale(yAccessor(d)))
-    //     // .attr("stroke", d => colorScale(colorAccessor(d)))
-    //     .attr("stroke", "dodgerblue")
-    //     .attr("opacity", 0.6)
-    //     .attr("stroke-width", "2px")
-
-    // let dots = bounds.selectAll("circle")
-    //     .data(dataset)
-    //     .enter()
-    //     .append("circle")
-    //         .attr("cx", d => xScale(xAccessor(d)))
-    //         .attr("cy", d => yScale(yAccessor(d)))
-    //         .attr("r", 5)
-    //         // .attr("fill", d => colorScale(colorAccessor(d)))
-    //         .attr("fill", "dodgerblue")
-    //         .attr("opacity", 0.6)
-
 
     const drawDots = (dataset) => {
 
@@ -152,7 +121,7 @@ async function drawChart() {
         d => xScale(xAccessor(d)),
         d => yScale(yAccessor(d)),
     )
-        
+
     const voronoi = delaunay.voronoi()
     voronoi.xmax = dimensions.boundedWidth
     voronoi.ymax = dimensions.boundedHeight
@@ -165,7 +134,7 @@ async function drawChart() {
         .attr("stroke", "salmon")
         .on("mouseenter", onMouseEnter)
         .on("mouseleave", onMouseLeave)
-        
+
     bounds.selectAll("circle")
         .on("mouseenter", onMouseEnter)
         .on("mouseleave", onMouseLeave)
@@ -173,7 +142,7 @@ async function drawChart() {
     const tooltip = d3.select("#tooltip")
 
     function onMouseEnter(datum) {
-    
+
         const hoveredDot = bounds.append("circle")
             .attr("class", "tooltipDot")
             .attr("cx", xScale(xAccessor(datum)))
@@ -193,10 +162,10 @@ async function drawChart() {
         const formatSpeed = d3.format(".2f")
         tooltip.select("#speed")
             .text(formatSpeed(xAccessor(datum)))
-        
+
         tooltip.select("#captain")
             .text(datum.captain)
-        
+
         tooltip.select("#craft")
             .text(datum.craft)
 
@@ -209,7 +178,7 @@ async function drawChart() {
             + dimensions.margin.left
         const y = yScale(yAccessor(datum))
             + dimensions.margin.top
-        
+
         tooltip.style("transform", `translate(`
             + `calc( -50% + ${x}px),`
             + `calc(-100% + ${y}px)`
@@ -226,7 +195,6 @@ async function drawChart() {
         d3.selectAll(".tooltipLine")
             .remove()
     }
-
 
 }
 drawChart()
