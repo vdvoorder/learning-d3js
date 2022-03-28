@@ -116,75 +116,118 @@ async function drawChart() {
 
     /* 7. Set up interactions */
 
-    const delaunay = d3.Delaunay.from(
-        dataset,
-        d => xScale(xAccessor(d)),
-        d => yScale(yAccessor(d)),
-    )
-
-    const voronoi = delaunay.voronoi()
-    voronoi.xmax = dimensions.boundedWidth
-    voronoi.ymax = dimensions.boundedHeight
-
-    bounds.selectAll(".voronoi")
-        .data(dataset)
-        .enter().append("path")
-        .attr("class", "voronoi")
-        .attr("d", (d, i) => voronoi.renderCell(i))
-        .attr("stroke", "salmon")
-        .on("mouseenter", onMouseEnter)
+    const listeningRect = bounds.append("rect")
+        .attr("class", "listening-rect")
+        .attr("width", dimensions.boundedWidth)
+        .attr("height", dimensions.boundedHeight)
+        .on("mousemove", onMouseMove)
         .on("mouseleave", onMouseLeave)
-
+    
     bounds.selectAll("circle")
-        .on("mouseenter", onMouseEnter)
+        .on("mouseenter", onMouseMove)
         .on("mouseleave", onMouseLeave)
 
     const tooltip = d3.select("#tooltip")
 
-    function onMouseEnter(datum) {
+    // function onMouseEnter(datum) {
+
+    //     const hoveredDot = bounds.append("circle")
+    //         .attr("class", "tooltipDot")
+    //         .attr("cx", xScale(xAccessor(datum)))
+    //         .attr("cy", yScale(yAccessor(datum)))
+    //         .attr("r", 7)
+    //         .style("pointer-events", "none")
+
+    //     const shootingLine = bounds.append("line")
+    //         .attr("class", "tooltipLine")
+    //         .attr("x1", 0)
+    //         .attr("y1", yScale(yAccessor(datum)))
+    //         .attr("x2", xScale(xAccessor(datum)))
+    //         .attr("y2", yScale(yAccessor(datum)))
+    //         .style("pointer-events", "none")
+
+    //     const formatSpeed = d3.format(".2f")
+    //     tooltip.select("#speed")
+    //         .text(formatSpeed(xAccessor(datum)))
+
+    //     tooltip.select("#captain")
+    //         .text(datum.captain)
+
+    //     tooltip.select("#craft")
+    //         .text(datum.craft)
+
+    //     const dateParser = d3.timeParse("%Y-%m-%d")
+    //     const formatDate = d3.timeFormat("%a %-d %b, %Y")
+    //     tooltip.select("#date")
+    //         .text(formatDate(dateParser(datum.date)))
+
+    //     const x = xScale(xAccessor(datum))
+    //         + dimensions.margin.left
+    //     const y = yScale(yAccessor(datum))
+    //         + dimensions.margin.top
+
+    //     tooltip.style("transform", `translate(`
+    //         + `calc( -50% + ${x}px),`
+    //         + `calc(-100% + ${y}px)`
+    //         + `)`)
+
+    //     tooltip.style("opacity", 1)
+
+    // }
+
+    function onMouseMove() {
+        const mousePosition = d3.mouse(this)
+        const hoveredDate = xScale.invert(mousePosition[0])
+
+        const getDistanceFromHoveredDate = d => Math.abs(
+        xAccessor(d) - hoveredDate
+        )
+        const closestIndex = d3.scan(dataset, (a, b) => (
+        getDistanceFromHoveredDate(a) - getDistanceFromHoveredDate(b)
+        ))
+
+        const closestDataPoint = dataset[closestIndex]
+        const closestXValue = xAccessor(closestDataPoint)
+        const closestYValue = yAccessor(closestDataPoint)
+
+        const x = xScale(closestXValue)
+            + dimensions.margin.left
+        const y = yScale(closestYValue)
+            + dimensions.margin.top
 
         const hoveredDot = bounds.append("circle")
             .attr("class", "tooltipDot")
-            .attr("cx", xScale(xAccessor(datum)))
-            .attr("cy", yScale(yAccessor(datum)))
+            .attr("cx", xScale(closestXValue))
+            .attr("cy", yScale(closestYValue))
             .attr("r", 7)
             .style("pointer-events", "none")
 
         const shootingLine = bounds.append("line")
             .attr("class", "tooltipLine")
             .attr("x1", 0)
-            .attr("y1", yScale(yAccessor(datum)))
-            .attr("x2", xScale(xAccessor(datum)))
-            .attr("y2", yScale(yAccessor(datum)))
+            .attr("y1", yScale(closestYValue))
+            .attr("x2", xScale(closestXValue))
+            .attr("y2", yScale(closestYValue))
             .style("pointer-events", "none")
 
         const formatSpeed = d3.format(".2f")
         tooltip.select("#speed")
-            .text(formatSpeed(xAccessor(datum)))
-
+            .text(formatSpeed(closestXValue))
         tooltip.select("#captain")
-            .text(datum.captain)
-
+            .text(closestDataPoint.captain)
         tooltip.select("#craft")
-            .text(datum.craft)
+            .text(closestDataPoint.craft)
 
         const dateParser = d3.timeParse("%Y-%m-%d")
         const formatDate = d3.timeFormat("%a %-d %b, %Y")
         tooltip.select("#date")
-            .text(formatDate(dateParser(datum.date)))
-
-        const x = xScale(xAccessor(datum))
-            + dimensions.margin.left
-        const y = yScale(yAccessor(datum))
-            + dimensions.margin.top
+            .text(formatDate(dateParser(closestDataPoint.date)))
 
         tooltip.style("transform", `translate(`
             + `calc( -50% + ${x}px),`
             + `calc(-100% + ${y}px)`
             + `)`)
-
         tooltip.style("opacity", 1)
-
     }
 
     function onMouseLeave() {
@@ -199,4 +242,4 @@ async function drawChart() {
 drawChart()
 
 // TODO: make shootingLine appear from left to right when hovering
-// TODO: adapt voronoi to scan
+// TODO: make non-closest tooltipLine and tooltipDot disappear onMouseMove()

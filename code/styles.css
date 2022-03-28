@@ -42,3 +42,6 @@ circle {
 .voronoi {
   fill: transparent;
 }
+.listening-rect {
+  fill: transparent;
+}
