@@ -156,7 +156,6 @@ async function drawChart() {
             .attr("y1", yScale(yAccessor(datum)))
             .attr("x2", xScale(xAccessor(datum)))
             .attr("y2", yScale(yAccessor(datum)))
-            // .attr("stroke", d => colorScale(colorAccessor(d)))
             .style("pointer-events", "none")
 
         const formatSpeed = d3.format(".2f")
@@ -200,3 +199,4 @@ async function drawChart() {
 drawChart()
 
 // TODO: make shootingLine appear from left to right when hovering
+// TODO: adapt voronoi to scan
